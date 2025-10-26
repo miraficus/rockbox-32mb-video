@@ -66,10 +66,14 @@ jobs:
       run: |
         sed -i 's/^MEMORYSIZE *=.*/MEMORYSIZE = 32/' build-ipod/Makefile
 
+    - name: Disable dependency generation
+      run: |
+        sed -i '/^include $(OBJDIR)\/make.dep/d' build-ipod/Makefile
+
     - name: Build Rockbox
       run: |
         cd build-ipod
-        make -j$(nproc)
+        make -j2
 
     - name: Upload firmware
       uses: actions/upload-artifact@v4
