@@ -1,0 +1,67 @@
+name: Build Rockbox iPod Video
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-rockbox:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Checkout Rockbox
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Checkout specific commit
+      run: git checkout e094c599fa60236527f9e272e0b8309d7696e399
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          gcc-9 \
+          g++-9 \
+          perl \
+          zip \
+          libncurses-dev \
+          libmpfr-dev \
+          libgmp-dev \
+          texinfo \
+          python3 \
+          python3-pip \
+          bison \
+          flex \
+          libusb-dev \
+          libusb-1.0-0-dev \
+          libtool \
+          autoconf \
+          automake \
+          git
+
+    - name: Install ARM toolchain
+      run: |
+        sudo apt-get install -y gcc-arm-none-eabi binutils-arm-none-eabi
+
+    - name: Configure Rockbox
+      run: |
+        mkdir build-ipod
+        cd build-ipod
+        ../tools/configure <<EOF
+        22
+        n
+        EOF
+
+    - name: Build Rockbox
+      run: |
+        cd build-ipod
+        make -j$(nproc)
+
+    - name: Upload firmware
+      uses: actions/upload-artifact@v4
+      with:
+        name: rockbox-ipodvideo
+        path: build-ipod/rockbox.ipod
