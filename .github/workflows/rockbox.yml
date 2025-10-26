@@ -66,11 +66,10 @@ jobs:
       run: |
         sed -i 's/^MEMORYSIZE *=.*/MEMORYSIZE = 32/' build-ipod/Makefile
 
-    - name: Generate lang.h from english.lang
+    - name: Generate lang.h and english.lng
       run: |
-        mkdir -p build-ipod/lang
-        tools/genlang -o build-ipod/lang/english.lng -t lng -L build-ipod/lang/ ../apps/lang/english.lang
-        tools/genlang -o build-ipod/lang/lang.h -t h -L build-ipod/lang/ ../apps/lang/english.lang
+        tools/genlang -o build-ipod/english.lng -t lng -L build-ipod/ ../apps/lang/english.lang
+        tools/genlang -o build-ipod/lang.h -t h -L build-ipod/ ../apps/lang/english.lang
 
     - name: Disable dependency generation
       run: |
