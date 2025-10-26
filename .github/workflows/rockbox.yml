@@ -71,6 +71,9 @@ jobs:
         tools/genlang -o build-ipod/english.lng -t lng -L build-ipod/ ../apps/lang/english.lang
         tools/genlang -o build-ipod/lang.h -t h -L build-ipod/ ../apps/lang/english.lang
 
+    - name: Symlink lang.h into apps/
+      run: ln -s ../lang.h build-ipod/apps/lang.h
+
     - name: Disable dependency generation
       run: |
         sed -i '/^include .*make.dep/d' build-ipod/Makefile
