@@ -8,8 +8,6 @@ on:
 jobs:
   build-rockbox:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/miraficus/rockbox-arm-gcc494:latest
 
     steps:
     - name: Checkout Rockbox
@@ -20,11 +18,13 @@ jobs:
     - name: Checkout specific commit
       run: git checkout e094c599fa60236527f9e272e0b8309d7696e399
 
-    - name: Install build dependencies
+    - name: Install dependencies
       run: |
-        apt-get update
-        apt-get install -y \
+        sudo apt-get update
+        sudo apt-get install -y \
           build-essential \
+          gcc-9 \
+          g++-9 \
           perl \
           zip \
           libncurses-dev \
@@ -32,6 +32,7 @@ jobs:
           libgmp-dev \
           texinfo \
           python3 \
+          python3-pip \
           bison \
           flex \
           libusb-dev \
@@ -39,7 +40,21 @@ jobs:
           libtool \
           autoconf \
           automake \
-          git
+          git \
+          gcc-arm-none-eabi \
+          binutils-arm-none-eabi
+
+    - name: Symlink toolchain to expected names
+      run: |
+        sudo ln -s /usr/bin/arm-none-eabi-gcc /usr/bin/arm-elf-eabi-gcc
+        sudo ln -s /usr/bin/arm-none-eabi-ld /usr/bin/arm-elf-eabi-ld
+        sudo ln -s /usr/bin/arm-none-eabi-cpp /usr/bin/arm-elf-eabi-cpp
+        sudo ln -s /usr/bin/arm-none-eabi-as /usr/bin/arm-elf-eabi-as
+        sudo ln -s /usr/bin/arm-none-eabi-ar /usr/bin/arm-elf-eabi-ar
+        sudo ln -s /usr/bin/arm-none-eabi-nm /usr/bin/arm-elf-eabi-nm
+        sudo ln -s /usr/bin/arm-none-eabi-objcopy /usr/bin/arm-elf-eabi-objcopy
+        sudo ln -s /usr/bin/arm-none-eabi-objdump /usr/bin/arm-elf-eabi-objdump
+        sudo ln -s /usr/bin/arm-none-eabi-ranlib /usr/bin/arm-elf-eabi-ranlib
 
     - name: Configure Rockbox
       run: |
@@ -51,16 +66,10 @@ jobs:
       run: |
         sed -i 's/^MEMORYSIZE *=.*/MEMORYSIZE = 32/' build-ipod/Makefile
 
-    - name: Prepare dependencies
-      run: |
-        cd build-ipod
-        echo > make.dep
-        touch deps
-
     - name: Build Rockbox
       run: |
         cd build-ipod
-        make -j2
+        make -j$(nproc)
 
     - name: Upload firmware
       uses: actions/upload-artifact@v4
