@@ -1,4 +1,4 @@
-name: Build Rockbox iPod Video
+name: Build Rockbox iPod Video (32 MB)
 
 on:
   workflow_dispatch:
@@ -40,20 +40,19 @@ jobs:
           libtool \
           autoconf \
           automake \
-          git
-
-    - name: Install ARM toolchain
-      run: |
-        sudo apt-get install -y gcc-arm-none-eabi binutils-arm-none-eabi
+          git \
+          gcc-arm-none-eabi \
+          binutils-arm-none-eabi
 
     - name: Configure Rockbox
       run: |
         mkdir build-ipod
         cd build-ipod
-        ../tools/configure <<EOF
-        22
-        n
-        EOF
+        printf "22\nn\n" | ../tools/configure
+
+    - name: Patch Makefile for 32 MB build
+      run: |
+        sed -i 's/^MEMORYSIZE *=.*/MEMORYSIZE = 32/' build-ipod/Makefile
 
     - name: Build Rockbox
       run: |
@@ -63,5 +62,5 @@ jobs:
     - name: Upload firmware
       uses: actions/upload-artifact@v4
       with:
-        name: rockbox-ipodvideo
+        name: rockbox-ipodvideo-32mb
         path: build-ipod/rockbox.ipod
