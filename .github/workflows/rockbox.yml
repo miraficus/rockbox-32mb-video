@@ -45,9 +45,10 @@ jobs:
 
     - name: Install GCC 4.9.4 toolchain
       run: |
-        wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/4_9-2015q3/gcc-arm-none-eabi-4_9-2015q3-20150921-linux.tar.bz2
-        tar -xjf gcc-arm-none-eabi-4_9-2015q3-20150921-linux.tar.bz2
-        echo "$PWD/gcc-arm-none-eabi-4_9-2015q3/bin" >> $GITHUB_PATH
+        wget https://toolchains.bootlin.com/downloads/releases/toolchains/arm-none-eabi/arm-2015.09-51-arm-none-eabi.tar.bz2
+        tar -xjf arm-2015.09-51-arm-none-eabi.tar.bz2
+        echo "$PWD/arm-2015.09-51-arm-none-eabi/bin" >> $GITHUB_PATH
+
 
     - name: Configure Rockbox
       run: |
