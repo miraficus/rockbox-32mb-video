@@ -72,7 +72,9 @@ jobs:
         tools/genlang -o build-ipod/lang.h -t h -L build-ipod/ ../apps/lang/english.lang
 
     - name: Symlink lang.h into apps/
-      run: ln -s ../lang.h build-ipod/apps/lang.h
+      run: |
+        mkdir -p build-ipod/apps
+        ln -s ../lang.h build-ipod/apps/lang.h
 
     - name: Disable dependency generation
       run: |
