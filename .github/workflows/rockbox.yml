@@ -66,9 +66,10 @@ jobs:
       run: |
         sed -i 's/^MEMORYSIZE *=.*/MEMORYSIZE = 32/' build-ipod/Makefile
 
-    - name: Disable dependency generation
+    - name: Disable dependency generation (robust)
       run: |
         sed -i '/^include .*make.dep/d' build-ipod/Makefile
+        touch build-ipod/make.dep
 
     - name: Build Rockbox
       run: |
