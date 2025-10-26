@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Checkout Rockbox
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -43,6 +43,18 @@ jobs:
           git \
           gcc-arm-none-eabi \
           binutils-arm-none-eabi
+
+    - name: Symlink toolchain to expected names
+      run: |
+        sudo ln -s /usr/bin/arm-none-eabi-gcc /usr/bin/arm-elf-eabi-gcc
+        sudo ln -s /usr/bin/arm-none-eabi-ld /usr/bin/arm-elf-eabi-ld
+        sudo ln -s /usr/bin/arm-none-eabi-cpp /usr/bin/arm-elf-eabi-cpp
+        sudo ln -s /usr/bin/arm-none-eabi-as /usr/bin/arm-elf-eabi-as
+        sudo ln -s /usr/bin/arm-none-eabi-ar /usr/bin/arm-elf-eabi-ar
+        sudo ln -s /usr/bin/arm-none-eabi-nm /usr/bin/arm-elf-eabi-nm
+        sudo ln -s /usr/bin/arm-none-eabi-objcopy /usr/bin/arm-elf-eabi-objcopy
+        sudo ln -s /usr/bin/arm-none-eabi-objdump /usr/bin/arm-elf-eabi-objdump
+        sudo ln -s /usr/bin/arm-none-eabi-ranlib /usr/bin/arm-elf-eabi-ranlib
 
     - name: Configure Rockbox
       run: |
