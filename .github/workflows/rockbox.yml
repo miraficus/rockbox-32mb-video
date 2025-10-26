@@ -68,7 +68,7 @@ jobs:
 
     - name: Disable dependency generation
       run: |
-        sed -i '/^include $(OBJDIR)\/make.dep/d' build-ipod/Makefile
+        sed -i '/^include .*make.dep/d' build-ipod/Makefile
 
     - name: Build Rockbox
       run: |
